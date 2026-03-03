@@ -1139,46 +1139,49 @@ function Get-WA_InstallAppList {
     $jsonContent = @'
 {
   "BaseApps": [
-    { 
-      "AppName": "Adobe Creative Cloud", 
-      "MatchName": "*Adobe Creative Cloud*", 
-      "Type": "ATOMIC_SCRIPT", 
-      "Script": "INSTALL_AdobeCC.ps1", 
-      "CheckMethod": "Registry", 
-      "InstallOrder": 50 
+    {
+      "AppName": "Adobe Creative Cloud",
+      "MatchName": "*Adobe Creative Cloud*",
+      "Type": "WINGET",
+      "WingetId": "Adobe.CreativeCloud",
+      "WingetScope": "machine",
+      "CheckMethod": "Registry",
+      "InstallOrder": 50
     },
-    { 
-      "AppName": "Box", 
-      "MatchName": "Box", 
-      "Type": "ATOMIC_SCRIPT", 
-      "Script": "INSTALL_BoxDrive.ps1", 
-      "CheckMethod": "Registry", 
-      "InstallOrder": 40 
+    {
+      "AppName": "Box",
+      "MatchName": "*Box*",
+      "Type": "WINGET",
+      "WingetId": "Box.Box",
+      "WingetScope": "machine",
+      "CheckMethod": "Registry",
+      "InstallOrder": 40
     },
-    { 
-      "AppName": "Box for Office", 
-      "MatchName": "*Box for Office*", 
-      "Type": "ATOMIC_SCRIPT", 
-      "Script": "INSTALL_BoxOffice.ps1", 
-      "CheckMethod": "Registry", 
-      "InstallOrder": 41 
+    {
+      "AppName": "Box for Office",
+      "MatchName": "*Box for Office*",
+      "Type": "WINGET",
+      "WingetId": "Box.BoxForOffice",
+      "CheckMethod": "Registry",
+      "InstallOrder": 41
     },
-    { 
-      "AppName": "Box Tools", 
-      "MatchName": "*Box Tools*", 
-      "Type": "ATOMIC_SCRIPT", 
-      "Script": "INSTALL_BoxTools.ps1", 
-      "CheckMethod": "Registry", 
-      "InstallOrder": 42 
+    {
+      "AppName": "Box Tools",
+      "MatchName": "*Box Tools*",
+      "Type": "WINGET",
+      "WingetId": "Box.BoxTools",
+      "CheckMethod": "Registry",
+      "InstallOrder": 42
     }
   ],
   "LaptopApps": [
     {
       "AppName": "Crestron AirMedia",
       "MatchName": "*AirMedia*",
-      "Type": "ATOMIC_SCRIPT", 
-      "Script": "INSTALL_AirMedia.ps1", 
-      "CheckMethod": "Registry", 
+      "Type": "WINGET",
+      "WingetId": "Crestron.AirMedia",
+      "WingetScope": "machine",
+      "CheckMethod": "Registry",
       "InstallOrder": 100
     }
   ]
@@ -1805,24 +1808,29 @@ function Invoke-WA_SetKernelMode {
         try { Start-Process "windowsdefender://coreisolation" -ErrorAction Stop }
         catch { try { Start-Process "explorer.exe" -ArgumentList "windowsdefender://coreisolation" } catch { Write-LeftAligned "$FGRed$Char_RedCross Failed to launch Windows Security.$Reset"; return } }
     
-        # Find Window
+        # Find Window with 5 retries
         $Desktop = [System.Windows.Automation.AutomationElement]::RootElement
-        $Window = Get-UIAElement -Parent $Desktop -Name "Windows Security" -Scope "Children" -TimeoutSeconds 10
+        $Window = $null
+        $retries = 5
+        for ($i = 0; $i -lt $retries; $i++) {
+            $Window = Get-UIAElement -Parent $Desktop -Name "Windows Security" -Scope "Children" -TimeoutSeconds 2 -ErrorAction SilentlyContinue
+            if ($Window) { break }
+            Write-Log "  Waiting for 'Windows Security' window... (Attempt $($i+1)/$retries)"
+            Start-Sleep -Seconds 2
+        }
     
         if ($Window) {
             Write-LeftAligned "  Windows Security Opened."
          
-            # Locate Toggle
+            # Locate Toggle with 5 retries
             $ToggleName = "Kernel-mode Hardware-enforced Stack Protection"
-            # Note: The toggle usually has the same name as the label in Settings/Security UI
-            # But sometimes it's just "On" or "Off" button NEXT to the label.
-            # In Core Isolation page, it's usually a toggle button.
-         
-            # We search for the specific text element, then find the toggle near it? 
-            # Or search for the Toggle directly?
-            # Based on previous research: The toggle is named "Kernel-mode Hardware-enforced Stack Protection"
-         
-            $Toggle = Get-UIAElement -Parent $Window -Name "Kernel-mode Hardware-enforced Stack Protection" -Scope "Descendants"
+            $Toggle = $null
+            for ($i = 0; $i -lt $retries; $i++) {
+                $Toggle = Get-UIAElement -Parent $Window -Name $ToggleName -Scope "Descendants" -TimeoutSeconds 2 -ErrorAction SilentlyContinue
+                if ($Toggle) { break }
+                Write-Log "  Waiting for toggle '$ToggleName'... (Attempt $($i+1)/$retries)"
+                Start-Sleep -Seconds 2
+            }
          
             if ($Toggle) {
                 $ToggleBase = $Toggle.GetCurrentPattern([System.Windows.Automation.TogglePattern]::Pattern)
@@ -1839,16 +1847,19 @@ function Invoke-WA_SetKernelMode {
                         Write-LeftAligned "$FGGray Setting already matches target.$Reset"
                     }
                 }
+                else {
+                    Write-LeftAligned "$FGRed$Char_RedCross Toggle pattern not found for '$ToggleName'.$Reset"
+                }
             }
             else {
-                Write-LeftAligned "$FGRed$Char_RedCross Toggle control not found.$Reset"
+                Write-LeftAligned "$FGRed$Char_RedCross Toggle control '$ToggleName' not found after $retries attempts.$Reset"
             }
          
             # Cleanup
             try { $Window.GetCurrentPattern([System.Windows.Automation.WindowPattern]::Pattern).Close() } catch {}
         }
         else {
-            Write-LeftAligned "$FGRed$Char_RedCross Failed to open Windows Security window.$Reset"
+            Write-LeftAligned "$FGRed$Char_RedCross Failed to open Windows Security window after $retries attempts.$Reset"
         }
 
     }
