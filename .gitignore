@@ -1,0 +1,14 @@
+# Runtime logs
+logs/
+*.log
+
+# Temp / debug artifacts
+diff.txt
+*.tmp
+
+# PowerShell session data
+*.psm1.bak
+
+# Windows
+Thumbs.db
+desktop.ini
