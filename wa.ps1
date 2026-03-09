@@ -1097,9 +1097,25 @@ function Invoke-WA_WindowsUpdate {
     Start-Sleep -Seconds 3
 }
 
-
-
-
+function Test-WA_MaintenanceRecentlyComplete {
+    # Check if all maintenance tasks were run within their thresholds
+    $tasks = @(
+        @{ Key = "Maintenance_SFC"; Days = 30 },
+        @{ Key = "Maintenance_Disk"; Days = 7 },
+        @{ Key = "Maintenance_Cleanup"; Days = 7 },
+        @{ Key = "Maintenance_WinUpdate"; Days = 1 }
+    )
+    foreach ($task in $tasks) {
+        $last = Get-WinAutoLastRun -Module $task.Key
+        if ($last -eq "Never") { return $false }
+        try {
+            $date = Get-Date $last
+            if ((Get-Date) -gt $date.AddDays($task.Days)) { return $false }
+        }
+        catch { return $false }
+    }
+    return $true
+}
 
 # --- MODULE HANDLERS ---
 
