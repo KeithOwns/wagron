@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     WinAuto (Core Edition)
 .DESCRIPTION
@@ -33,8 +33,8 @@ if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
 }
 
 # Validate -Module (manual check for iex compatibility)
-if ($Module -and $Module -notin @("SmartRun", "Install", "Config", "Maintenance", "Help")) {
-    Write-Error "Invalid Module: '$Module'. Valid values: SmartRun, Install, Config, Maintenance, Help"
+if ($Module -and $Module -notin @("SmartRun", "Config", "Maintenance", "Help")) {
+    Write-Error "Invalid Module: '$Module'. Valid values: SmartRun, Config, Maintenance, Help"
     return
 }
 
@@ -183,16 +183,8 @@ ________________________________________________________
 [S]martRUN
 Method: Orchestration Loop
 Actions:
-- Install Apps Check        | Invoke-WA_InstallApps
 - Configuration Check       | Invoke-WinAutoConfiguration -SmartRun
 - Maintenance Check         | Invoke-WinAutoMaintenance -SmartRun
-________________________________________________________
-[I]nstall Applications
-Method: Config Driven (Embedded JSON)
-Actions:
-- Read Config & Detect Type | Get-WA_InstallAppList
-- Check Installed State     | Test-AppInstalled
-- Install (Winget/MSI/EXE)  | Invoke-WA_InstallApps
 ________________________________________________________
 [C]onfiguration
 Security Actions:
@@ -253,11 +245,6 @@ ${FGDarkCyan}============================================================${Reset
 ${FGDarkCyan}__________________________________________________________${Reset}
 ${FGCyan}ACTION${Reset}                   ${FGDarkGray}|${Reset} ${FGCyan}STAGE${Reset}    ${FGDarkGray}|${Reset} ${FGDarkCyan}SOURCE SCRIPT${Reset}
 ${FGDarkGray}----------------------------------------------------------${Reset}
-Adobe Creative Cloud     ${FGDarkGray}|${Reset} ${FGDarkCyan}Install${Reset}  ${FGDarkGray}|${Reset} ${FGGray}INSTALL_AdobeCC.ps1${Reset}
-Box Drive                ${FGDarkGray}|${Reset} ${FGDarkCyan}Install${Reset}  ${FGDarkGray}|${Reset} ${FGGray}INSTALL_BoxDrive.ps1${Reset}
-Box for Office           ${FGDarkGray}|${Reset} ${FGDarkCyan}Install${Reset}  ${FGDarkGray}|${Reset} ${FGGray}INSTALL_BoxOffice.ps1${Reset}
-Box Tools                ${FGDarkGray}|${Reset} ${FGDarkCyan}Install${Reset}  ${FGDarkGray}|${Reset} ${FGGray}INSTALL_BoxTools.ps1${Reset}
-Crestron AirMedia        ${FGDarkGray}|${Reset} ${FGDarkCyan}Install${Reset}  ${FGDarkGray}|${Reset} ${FGGray}INSTALL_AirMedia.ps1${Reset}
 Real-Time Protection     ${FGDarkGray}|${Reset} ${FGBlue}Configure${Reset}${FGDarkGray}|${Reset} ${FGGray}SET_RealTimeProt.ps1${Reset}
 PUA Block Apps           ${FGDarkGray}|${Reset} ${FGBlue}Configure${Reset}${FGDarkGray}|${Reset} ${FGGray}SET_PUABlockApps.ps1${Reset}
 PUA Downloads            ${FGDarkGray}|${Reset} ${FGBlue}Configure${Reset}${FGDarkGray}|${Reset} ${FGGray}SET_PUABlockDLs.ps1${Reset}
@@ -285,11 +272,6 @@ Execution Policy / Admin Check,Pre-Run Setup,wa.ps1,Inline,Set-ExecutionPolicy R
 Auto-Unblock,Pre-Run Setup,wa.ps1,Inline,Unblock-File (Self),N/A,No,System,(Script Header)
 System Hardening Check,SmartRUN,CHECK_SystemHarden.ps1,Mixed,Checks Last Run date (30 days) to determine invalidation,N/A,No,Automation,Invoke-WinAutoConfiguration -SmartRun
 Maintenance Cycle,SmartRUN,SET_ScheduleMaintn.ps1,Mixed,Checks Last Run dates (SFC=30d; Disk=7d; Clean=7d) to trigger tasks,N/A,No,Automation,Invoke-WinAutoMaintenance -SmartRun
-Adobe Creative Cloud,Install,INSTALL_AdobeCC.ps1,ATOMIC_SCRIPT,Uses AtomicScript for WinGet install,No,No,System,Invoke-WA_InstallApps
-Box Drive,Install,INSTALL_BoxDrive.ps1,ATOMIC_SCRIPT,Note: MSI has specific uninstall GUID issues,No,No,System,Invoke-WA_InstallApps
-Box for Office,Install,INSTALL_BoxOffice.ps1,ATOMIC_SCRIPT,EXE installer with silent args,No,No,System,Invoke-WA_InstallApps
-Box Tools,Install,INSTALL_BoxTools.ps1,ATOMIC_SCRIPT,EXE installer with silent args,No,No,System,Invoke-WA_InstallApps
-Crestron AirMedia,Install,INSTALL_AirMedia.ps1,ATOMIC_SCRIPT,Uses AtomicScript for WinGet/Machine install,No,No,System,Invoke-WA_InstallApps
 Real-Time Protection,Configure,SET_RealTimeProt.ps1,PS WMI,Set-MpPreference -DisableRealtimeMonitoring 0,Yes,No,Security,Invoke-WA_SetRealTimeProtection
 PUA Block Apps,Configure,SET_PUABlockApps.ps1,PS WMI,Set-MpPreference -PUAProtection 1,Yes,No,Security,Invoke-WA_SetPUABlockApps
 PUA Downloads,Configure,SET_PUABlockDLs.ps1,Registry (HKCU),HKCU:\Software\Microsoft\Edge\SmartScreenPuaEnabled (1),Yes,No,Security,Invoke-WA_SetPUABlockDLs
@@ -1117,321 +1099,7 @@ function Invoke-WA_WindowsUpdate {
 
 
 
-function Get-WA_InstallAppList {
-    # --- EXTERNAL CONFIGURATION ---
-    if ($Global:Config -and (Test-Path $Global:Config)) {
-        try {
-            Write-Log "Loading external configuration from: $Global:Config"
-            $json = Get-Content -Raw $Global:Config -ErrorAction Stop
-            if ($json) { 
-                $obj = $json | ConvertFrom-Json -ErrorAction Stop
-                if ($obj.BaseApps) { return $obj.BaseApps }
-                return $obj # Fallback if user just provided a raw array
-            }
-        }
-        catch {
-            Write-Log "Failed to load external config: $($_.Exception.Message)" -Level ERROR
-            Write-Warning "External config failed to load. Falling back to embedded defaults."
-        }
-    }
 
-    # Hardcoded Configuration (Embedded Install_RequiredApps-Config.json)
-    $jsonContent = @'
-{
-  "BaseApps": [
-    {
-      "AppName": "Adobe Creative Cloud",
-      "MatchName": "*Adobe Creative Cloud*",
-      "Type": "WINGET",
-      "WingetId": "Adobe.CreativeCloud",
-      "WingetScope": "machine",
-      "CheckMethod": "Registry",
-      "InstallOrder": 50
-    },
-    {
-      "AppName": "Box",
-      "MatchName": "*Box*",
-      "Type": "WINGET",
-      "WingetId": "Box.Box",
-      "WingetScope": "machine",
-      "CheckMethod": "Registry",
-      "InstallOrder": 40
-    },
-    {
-      "AppName": "Box for Office",
-      "MatchName": "*Box for Office*",
-      "Type": "WINGET",
-      "WingetId": "Box.BoxForOffice",
-      "CheckMethod": "Registry",
-      "InstallOrder": 41
-    },
-    {
-      "AppName": "Box Tools",
-      "MatchName": "*Box Tools*",
-      "Type": "WINGET",
-      "WingetId": "Box.BoxTools",
-      "CheckMethod": "Registry",
-      "InstallOrder": 42
-    }
-  ],
-  "LaptopApps": [
-    {
-      "AppName": "Crestron AirMedia",
-      "MatchName": "*AirMedia*",
-      "Type": "WINGET",
-      "WingetId": "Crestron.AirMedia",
-      "WingetScope": "machine",
-      "CheckMethod": "Registry",
-      "InstallOrder": 100
-    }
-  ]
-}
-'@
-
-    try {
-        $config = $jsonContent | ConvertFrom-Json -ErrorAction Stop
-    }
-    catch {
-        Write-Log "Critical Error: Embedded JSON Configuration is invalid. Exception: $($_.Exception.Message)" -Level ERROR
-        return $null 
-    }
-
-    # Device Type Detection
-    $IsDesktop = $false
-    try {
-        $chassis = (Get-CimInstance -ClassName Win32_SystemEnclosure -ErrorAction SilentlyContinue).ChassisTypes
-        if ($chassis -and ($chassis -contains 3 -or $chassis -contains 4 -or $chassis -contains 6 -or $chassis -contains 7 -or $chassis -contains 15 -or $chassis -contains 23 -or $chassis -contains 31)) { 
-            $IsDesktop = $true 
-        }
-    }
-    catch {}
-
-    $AppList = @()
-    if ($config.BaseApps) { $AppList += $config.BaseApps }
-    if (-not $IsDesktop -and $config.LaptopApps) { $AppList += $config.LaptopApps }
-    
-    if ($AppList) {
-        return ($AppList | Sort-Object InstallOrder)
-    }
-    return @()
-}
-
-
-function Test-WA_AppInstalled {
-    param($App)
-    $scopes = @("HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall", "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall")
-    $pattern = if ($App.MatchName) { $App.MatchName } else { $App.AppName }
-    foreach ($s in $scopes) {
-        if (Test-Path $s) {
-            foreach ($k in (Get-ChildItem $s -ErrorAction SilentlyContinue)) {
-                $dn = $k.GetValue('DisplayName', $null)
-                if ($dn -and $dn -like $pattern) { return $true }
-            }
-        }
-    }
-    return $false
-}
-
-function Test-WA_AllAppsInstalled {
-    $AppList = Get-WA_InstallAppList
-    if (-not $AppList -or $AppList.Count -eq 0) { return $true }  # No apps to install = all done
-    foreach ($app in $AppList) {
-        if (-not (Test-WA_AppInstalled -App $app)) { return $false }
-    }
-    return $true
-}
-
-function Test-WA_MaintenanceRecentlyComplete {
-    # Check if all maintenance tasks were run within their thresholds
-    $tasks = @(
-        @{ Key = "Maintenance_SFC"; Days = 30 },
-        @{ Key = "Maintenance_Disk"; Days = 7 },
-        @{ Key = "Maintenance_Cleanup"; Days = 7 },
-        @{ Key = "Maintenance_WinUpdate"; Days = 1 }
-    )
-    foreach ($task in $tasks) {
-        $last = Get-WinAutoLastRun -Module $task.Key
-        if ($last -eq "Never") { return $false }
-        try {
-            $date = Get-Date $last
-            if ((Get-Date) -gt $date.AddDays($task.Days)) { return $false }
-        }
-        catch { return $false }
-    }
-    return $true
-}
-
-function Invoke-WA_InstallApps {
-    param([switch]$SmartRun)
-    Write-Header "APPLICATION INSTALLER"
-    
-    $AppList = Get-WA_InstallAppList
-    
-    if ($null -eq $AppList) {
-        $msg = "Configuration Error: Embedded JSON is invalid or could not be parsed."
-        Write-LeftAligned "$FGRed$Global:Char_Warn $msg$Reset"
-        Write-Log $msg -Level ERROR
-        return
-    }
-    
-    if ($null -eq $AppList) { return } # Failed to download or parse
-
-    
-    # Helper: Test-AppInstalled (Inline for standalone)
-    function Test-AppInstalled {
-        param($App)
-        # Registry Check
-        $scopes = @("HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall", "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall")
-        $pattern = if ($App.PSObject.Properties['MatchName'] -and $App.MatchName) { $App.MatchName } else { $App.AppName }
-        
-        foreach ($s in $scopes) {
-            if (Test-Path $s) {
-                foreach ($k in (Get-ChildItem $s -ErrorAction SilentlyContinue)) {
-                    $dn = $k.GetValue('DisplayName', $null)
-                    if ($dn -and $dn -like $pattern) { return $true }
-                }
-            }
-        }
-        return $false
-    }
-    
-    
-
-    # --- CONFIRMATION PROMPT ---
-    $AppsToInstall = @()
-    foreach ($app in $AppList) {
-        if (-not (Test-AppInstalled -App $app)) {
-            $AppsToInstall += $app
-        }
-    }
-
-    if (@($AppsToInstall).Count -gt 0) {
-        Write-Host ""
-        Write-LeftAligned "$FGYellow$Char_Warn $(@($AppsToInstall).Count) applications are missing or outdated.$Reset"
-        
-        $Confirmed = $true
-        if (-not $Global:Silent -and -not $SmartRun) {
-            Write-LeftAligned "Proceed with installation? [Y]es (Default) / [S]kip"
-            $k = Wait-KeyPressWithTimeout -Seconds 30
-            if ($k.Character -eq 's' -or $k.Character -eq 'S' -or $k.VirtualKeyCode -eq 27) {
-                $Confirmed = $false
-            }
-        }
-        
-        if (-not $Confirmed) {
-            Write-LeftAligned "Skipping installation as requested."
-            return
-        }
-        
-        # Proceed with Installation
-        Write-LeftAligned "Processing $(@($AppList).Count) applications..."
-    
-        foreach ($app in $AppList) {
-            Write-Host ""
-            if (Test-AppInstalled -App $app) {
-                Write-LeftAligned "$FGGreen$Global:Char_BallotCheck $($app.AppName) is already installed.$Reset"
-                continue
-            }
-
-            Write-LeftAligned "$FGWhite$Global:Char_Finger Installing $($app.AppName)...$Reset"
-        
-            try {
-                if ($app.Type -eq "WINGET") {
-                    Write-LeftAligned "Installing via WinGet ($($app.WingetId))..."
-                    $installArgs = "install --id $($app.WingetId) --exact --accept-package-agreements --accept-source-agreements --silent"
-                    if ($app.PSObject.Properties['WingetScope'] -and $app.WingetScope) { $installArgs += " --scope $($app.WingetScope)" }
-                
-                    $p = Start-Process winget -ArgumentList $installArgs -NoNewWindow -PassThru -Wait
-                    if ($p.ExitCode -eq 0) {
-                        Write-LeftAligned "$FGGreen$Global:Char_CheckMark Installation Successful.$Reset"
-                        Write-Log "Installed $($app.AppName) via WinGet." -Level INFO
-                    }
-                    else {
-                        throw "WinGet exited with code $($p.ExitCode)"
-                    }
-                }
-                elseif ($app.Type -eq "ATOMIC_SCRIPT") {
-                    Write-LeftAligned "Running Atomic Script: $($app.Script)..."
-
-                    $scriptName = $app.Script
-                    $scriptPath = $null
-                    
-                    # Check paths (Standard Dev / Deployment structure)
-                    $root = if ($PSScriptRoot) { $PSScriptRoot } else { $PWD.Path }
-                    # Check dev path (scripts\AtomicScripts) and potential flat path
-                    $pathsToCheck = @(
-                        "scripts\AtomicScripts\Installers\$scriptName",
-                        "AtomicScripts\Installers\$scriptName",
-                        "scripts\AtomicScripts\$scriptName",
-                        "AtomicScripts\$scriptName",
-                        "$scriptName"
-                    )
-                    
-                    foreach ($subPath in $pathsToCheck) {
-                        $p = Join-Path $root $subPath
-                        if (Test-Path $p) { $scriptPath = $p; break }
-                    }
-
-                    if (-not $scriptPath) {
-                        Write-LeftAligned "$FGYellow$Global:Char_Warn Script not found: $scriptName - Skipping (place script alongside wa.ps1 to install).$Reset"
-                        Write-Log "Skipped $($app.AppName): script '$scriptName' not found." -Level WARN
-                        continue
-                    }
-                    
-                    # Execute Atomic Script
-                    # Using powershell.exe to ensure clean execution context and handle any bitness issues
-                    $p = Start-Process "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -File `"$scriptPath`"" -Wait -PassThru -NoNewWindow
-                    
-                    if ($p.ExitCode -eq 0) {
-                        Write-LeftAligned "$FGGreen$Global:Char_CheckMark Installation Successful.$Reset"
-                        Write-Log "Installed $($app.AppName) via AtomicScript." -Level INFO
-                    }
-                    else {
-                        throw "Script exited with code $($p.ExitCode)"
-                    }
-                }
-                elseif ($app.PSObject.Properties['Url'] -and $app.Url) {
-                    # Download and Install (MSI/EXE)
-                    $ext = if ($app.Type -eq "MSI") { ".msi" } else { ".exe" }
-                    $tempFile = "$env:TEMP\WinAuto_Install$ext"
-                    Write-LeftAligned "Downloading installer..."
-                    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls13
-                    Invoke-WebRequest -Uri $app.Url -OutFile $tempFile -UseBasicParsing -ErrorAction Stop
-                
-                    Write-LeftAligned "Running installer..."
-                    # Handle PreInstallDelay if property exists
-                    if ($app.PSObject.Properties['PreInstallDelay'] -and $app.PreInstallDelay) { Start-Sleep -Seconds $app.PreInstallDelay }
-                
-                    $procArgs = if ($app.PSObject.Properties['SilentArgs'] -and $app.SilentArgs) { $app.SilentArgs } else { "/quiet /norestart" }
-                    if ($app.Type -eq "MSI") {
-                        $msiArgs = "/i `"$tempFile`" $procArgs"
-                        $p = Start-Process "msiexec.exe" -ArgumentList $msiArgs -Wait -PassThru
-                    }
-                    else {
-                        $p = Start-Process $tempFile -ArgumentList $procArgs -NoNewWindow -PassThru -Wait -ErrorAction Stop
-                    }
-                
-                    if ($p.ExitCode -eq 0 -or $p.ExitCode -eq 3010) {
-                        Write-LeftAligned "$FGGreen$Global:Char_CheckMark Installation Successful.$Reset"
-                        Write-Log "Installed $($app.AppName)." -Level INFO
-                    }
-                    else { throw "Installer exited with code $($p.ExitCode)" }
-                
-                    Remove-Item $tempFile -Force -ErrorAction SilentlyContinue
-                }
-            }
-            catch {
-                Write-LeftAligned "   $FGRed$Global:Char_Warn Error: $($_.Exception.Message)$Reset"
-                Write-Log "Failed to install $($app.AppName): $($_.Exception.Message)" -Level ERROR
-            }
-        }
-    
-        Invoke-AnimatedPause -Timeout 5 | Out-Null
-    }
-    else {
-        Write-LeftAligned "$FGGreen$Char_HeavyCheck All applications installed.$Reset"
-    }
-}
 
 # --- MODULE HANDLERS ---
 
@@ -2486,9 +2154,7 @@ if ($Silent -or $Module) {
         "SmartRun" { 
             Invoke-WinAutoConfiguration -SmartRun
             Invoke-WinAutoMaintenance -SmartRun
-            if (-not $Global:AllAppsInstalled) { Invoke-WA_InstallApps -SmartRun }
         }
-        "Install" { Invoke-WA_InstallApps }
         "Config" { Invoke-WinAutoConfiguration }
         "Maintenance" { Invoke-WinAutoMaintenance }
         "Help" { Write-Host $Global:WinAutoManifestContent; exit 0 }
@@ -2511,9 +2177,8 @@ $Global:WinAutoFirstLoad = $true
 while ($true) {
     # Arrows (Updated Indices)
     # 0 = SmartRUN
-    # 1 = Install
-    # 2 = Config
-    # 3 = Maintenance
+    # 1 = Config
+    # 2 = Maintenance
     
 
 
@@ -2531,10 +2196,6 @@ while ($true) {
         }
     }
     
-    # Install
-    $Global:AllAppsInstalled = Test-WA_AllAppsInstalled
-    if ($Global:AllAppsInstalled) { $Global:AnySkipped = $true }
-    
     # Maintain
     $Global:MaintenanceComplete = Test-WA_MaintenanceRecentlyComplete
     if ($Global:MaintenanceComplete) { $Global:AnySkipped = $true }
@@ -2551,10 +2212,9 @@ while ($true) {
     }
     
     # SmartRUN Indicators
-    $cInst = if (-not $Global:AllAppsInstalled) { $FGCyan } else { $FGDarkGray }
     $cConf = if (-not $configSkipped) { $FGCyan } else { $FGDarkGray }
     $cMaint = if (-not $Global:MaintenanceComplete) { $FGCyan } else { $FGDarkGray }
-    Write-Centered "${cInst}Install${Reset} ${FGDarkGray}|${Reset} ${cConf}Configure${Reset} ${FGDarkGray}|${Reset} ${cMaint}Maintain${Reset}"
+    Write-Centered "${cConf}Configure${Reset} ${FGDarkGray}|${Reset} ${cMaint}Maintain${Reset}"
 
 
 
@@ -2584,73 +2244,8 @@ while ($true) {
     }
     Write-Boundary # Separator
 
-    # [I]nstall Applications (Pos 1)
+    # [C]onfigure Operating System (Pos 1)
     if ($MenuSelection -eq 1) {
-        # Full Width Highlight (60 chars)
-        Write-Host "${FGYellow}->${Reset}${FGBlack}${BGYellow}                    Install Applications                ${Reset}${FGYellow}<-${Reset}" -NoNewline
-        Write-Host ""
-        # Write-LeftAligned "${FGYellow}->${Reset}${FGBlack}${BGYellow}|${Reset}${FGBlack}${BGYellow}I${Reset}${FGBlack}${BGYellow}nstall Applications${Reset}${FGBlack}${BGYellow}|${Reset}${FGYellow}<-${Reset}" -Indent 17
-    }
-    else {
-        Write-Centered "${FGDarkCyan}|${Reset} ${FGDarkCyan}I${Reset}${FGDarkCyan}nstall Applications${Reset} ${FGDarkCyan}|${Reset}"
-    }
-    Write-Host ""
-    
-    Write-LeftAligned "${FGDarkGray}[${FGWhite}>${FGDarkGray}] ${FGWhite}INSTALL / ${FGDarkGray}[${FGWhite}v${FGDarkGray}] ${FGWhite}INSTALLED    ${FGDarkGray}|${FGWhite} ATOMIC_SCRIPT$Reset" -Indent 2
-    Write-Centered "${FGDarkGray}--------------------------------------------------------$Reset"
-
-    $iDetailColor = if ($MenuSelection -eq 1) { $FGGray } else { $FGDarkGray }
-    $appListDisplay = Get-WA_InstallAppList
-    
-    if ($appListDisplay) {
-        foreach ($app in $appListDisplay) {
-            $isInst = Test-WA_AppInstalled -App $app
-            $icon = if ($isInst) { "${FGDarkGray}[${FGDarkGreen}v${FGDarkGray}]${Reset}" } else { "${FGDarkGray}[${FGYellow}>${FGDarkGray}]${Reset}" }
-            $appColor = if ($isInst) { $FGDarkGray } else { $iDetailColor }
-            $dName = "$icon ${appColor}$($app.AppName)${Reset}"
-            $cleanName = "[v] $($app.AppName)"
-            
-            $dPadCount = 30 - $cleanName.Length
-            if ($dPadCount -lt 1) { $dPadCount = 1 }
-            $dPad = " " * $dPadCount
-            
-            # Right Column: Install Source (Atomic Script Name)
-            $source = "Unknown"
-            if ($app.PSObject.Properties['Script'] -and $app.Script) {
-                $source = $app.Script
-            }
-            elseif ($app.PSObject.Properties['InstallerPath'] -and $app.InstallerPath) { 
-                $source = Split-Path $app.InstallerPath -Leaf 
-            }
-            elseif ($app.PSObject.Properties['WinGetId'] -and $app.WinGetId) { 
-                $source = $app.WinGetId 
-            }
-            elseif ($app.PSObject.Properties['Url'] -and $app.Url) { 
-                # Extract filename from URL
-                $source = Split-Path $app.Url -Leaf 
-            }
-            elseif ($app.PSObject.Properties['Source'] -and $app.Source) { 
-                $source = $app.Source 
-            }
-            elseif ($app.PSObject.Properties['Type'] -and $app.Type) { 
-                $source = $app.Type 
-            }
-            
-            # Conditional Coloring for Script Name
-            $sourceColor = if ($isInst) { $FGDarkGray } elseif ($MenuSelection -eq 1) { $FGYellow } else { $FGDarkGray }
-
-            Write-LeftAligned "${dName}${Reset}$dPad${FGDarkGray}| ${sourceColor}$source${Reset}" -Indent 3
-        }
-    }
-    else {
-        Write-LeftAligned "${iDetailColor}- (Config not found in Downloads)${Reset}" -Indent 3
-    }
-    
-    Write-Host ""
-    Write-Boundary # Separator
-
-    # [C]onfigure Operating System (Pos 2)
-    if ($MenuSelection -eq 2) {
         Write-Host "${FGYellow}->${Reset}${FGBlack}${BGYellow}                 Configure Operating System               ${Reset}${FGYellow}<-${Reset}"
     }
     else {
@@ -2662,7 +2257,7 @@ while ($true) {
     Write-Centered "${FGDarkGray}--------------------------------------------------------$Reset"
     
     # Config Details
-    $cDetailColor = if ($MenuSelection -eq 2) { $FGGray } else { $FGDarkGray }
+    $cDetailColor = if ($MenuSelection -eq 1) { $FGGray } else { $FGDarkGray }
     
     # Helper to print item with status
     function Write-ColItem {
@@ -2752,9 +2347,9 @@ while ($true) {
     
     Write-Boundary # Separator
 
-    # [M]aintain Operating System (Pos 4)
+    # [M]aintain Operating System (Pos 2)
 
-    if ($MenuSelection -eq 3) {
+    if ($MenuSelection -eq 2) {
         Write-Host "${FGYellow}->${Reset}${FGBlack}${BGYellow}                 Maintain Operating System                ${Reset}${FGYellow}<-${Reset}"
     }
     else {
@@ -2764,7 +2359,7 @@ while ($true) {
     Write-Host ""
     
     # Maintenance Details
-    $mDetailColor = if ($MenuSelection -eq 3) { $FGGray } else { $FGDarkGray }
+    $mDetailColor = if ($MenuSelection -eq 2) { $FGGray } else { $FGDarkGray }
     
     function Write-MaintItem {
         param($Txt, $Met, $Key, [int]$Threshold = 7) 
@@ -2836,13 +2431,13 @@ while ($true) {
     if ($res.VirtualKeyCode -eq 38) {
         # Up
         $MenuSelection--
-        if ($MenuSelection -lt 0) { $MenuSelection = 3 }
+        if ($MenuSelection -lt 0) { $MenuSelection = 2 }
         continue
     }
     elseif ($res.VirtualKeyCode -eq 40) {
         # Down
         $MenuSelection++
-        if ($MenuSelection -gt 3) { $MenuSelection = 0 }
+        if ($MenuSelection -gt 2) { $MenuSelection = 0 }
         continue
     }
     elseif ($res.VirtualKeyCode -eq 39) {
@@ -2878,21 +2473,16 @@ while ($true) {
         
         if ($Target -eq 0) {
             # [S]mart Run -> EXECUTE
-            if (-not $Global:AllAppsInstalled) { Invoke-WA_InstallApps -SmartRun }
             Invoke-WinAutoConfiguration -SmartRun
             Set-WinAutoLastRun -Module "Configuration"
             if (-not $Global:MaintenanceComplete) { Invoke-WinAutoMaintenance -SmartRun }
         }
         elseif ($Target -eq 1) {
-            # [I]nstall -> EXECUTE (Manual overrides check)
-            Invoke-WA_InstallApps
-        }
-        elseif ($Target -eq 2) {
             # [C]onfig -> EXECUTE
             Invoke-WinAutoConfiguration
             Set-WinAutoLastRun -Module "Configuration"
         }
-        elseif ($Target -eq 3) {
+        elseif ($Target -eq 2) {
             # [M]aintenance -> EXECUTE (Manual overrides check)
             Invoke-WinAutoMaintenance
         }
