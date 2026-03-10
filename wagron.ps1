@@ -302,7 +302,7 @@ Memory Integrity,Configure,SET_MemoryInteg.ps1,Registry (HKLM),HKLM:\SYSTEM\Curr
 Kernel Stack Protection,Configure,SET_KernelMode.ps1,Registry (HKLM),HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\KernelShadowStacks (Enabled=1),Yes,Yes,Security,Invoke-WA_SetKernelMode
 LSA Protection,Configure,SET_LocalSecurity.ps1,Registry (HKLM),HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\RunAsPPL (1),Yes,Yes,Security,Invoke-WA_SetLocalSecurity
 Windows Firewall,Configure,SET_FirewallON.ps1,PowerShell Cmdlt,Set-NetFirewallProfile -Enabled True,Yes,No,Security,Invoke-WA_SetFirewallON
-App & browser control,Configure,SET_AppBrowserControlUIA.ps1,UI Automation,Automates Windows Security App & browser control,No,No,Security,Invoke-WA_TurnOnAppBrowserControl
+App & browser control,Configure,UIA_AppBrowserCtrl.ps1,UI Automation,Automates Windows Security App & browser control,No,No,Security,Invoke-WA_TurnOnAppBrowserControl
 Classic Context Menu,Configure,SET_ClassicMenu.ps1,Registry (HKCU),HKCU:\Software\Classes\CLSID\{86ca1aa0...}\InprocServer32,Yes,No,UI,Invoke-WA_SetClassicMenu
 Taskbar Search Box,Configure,SET_TaskbarSearch.ps1,Registry (HKCU),HKCU:\Software\Microsoft\Windows\CurrentVersion\Search\SearchboxTaskbarMode (3),Yes,No,UI,Invoke-WA_SetTaskbarSearch
 Task View Toggle,Configure,SET_TaskViewOFF.ps1,Registry (HKCU),HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\ShowTaskViewButton (0),Yes,No,UI,Invoke-WA_SetTaskViewOFF
@@ -3050,7 +3050,7 @@ while ($true) {
     Write-ColItem "Kernel Stack Protection" "SET_KernelMode.ps1" $s_Kern
     Write-ColItem "LSA Protection" "SET_LocalSecurity.ps1" $s_LSA
     Write-ColItem "Windows Firewall" "SET_FirewallON.ps1" $s_FW
-    Write-ColItem "App & browser control" "SET_AppBrowserControlUIA.ps1" $null
+    Write-ColItem "App & browser control" "UIA_AppBrowserCtrl.ps1" $null
     Write-ColItem "Classic Context Menu" "SET_ClassicMenu.ps1" $s_Ctx
     Write-ColItem "Taskbar Search Box" "SET_TaskbarSearch.ps1" $s_Task
     Write-ColItem "Task View Toggle" "SET_TaskViewOFF.ps1" $s_View
