@@ -1492,17 +1492,18 @@ function Invoke-WinAutoConfiguration {
         Invoke-WA_SetKernelMode
     }
     
-    # UIA Remediation Steps (Only run if detected as disabled to minimize window popping)
-    $runRT = $false
-    $runSS = $false
+    # UIA Remediation Steps (Only run if detected as disabled to minimize window popping, unless in Manual Mode)
+    $runRT = -not $SmartRun
+    $runSS = -not $SmartRun
 
-    try {
-        $mp = Get-MpPreference -ErrorAction SilentlyContinue
-        if ($mp.DisableRealtimeMonitoring -eq $true) { $runRT = $true }
-        # SmartScreen (App & Browser Control) often maps to EnableSmartScreen in MpPreference
-        if ($mp.EnableSmartScreen -eq $false) { $runSS = $true }
+    if ($SmartRun) {
+        try {
+            $mp = Get-MpPreference -ErrorAction SilentlyContinue
+            if ($mp.DisableRealtimeMonitoring -eq $true) { $runRT = $true }
+            if ($mp.EnableSmartScreen -eq $false) { $runSS = $true }
+        }
+        catch { $runRT = $true; $runSS = $true }
     }
-    catch { $runRT = $true; $runSS = $true }
 
     if ($runSS) { Invoke-WA_SetSmartScreen }
     if ($runRT) { Invoke-WA_SetVirusThreatProtect }
