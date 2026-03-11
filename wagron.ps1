@@ -2885,13 +2885,12 @@ while ($true) {
     Write-Host ""
     Write-Boundary # Separator
 
-    # [C]onfigure Operating System (Pos 2)
+    # MANUAL-MODE (Pos 2) - Runs Configure + Maintain, all steps forced
     if ($MenuSelection -eq 2) {
-        # Align with 56-char boundary lines (2 space indent + 56 char block)
-        Write-Host "  ${FGBlack}${BGYellow}               Configure Operating System               ${Reset}"
+        Write-Host "  ${FGBlack}${BGYellow}                      MANUAL-MODE                      ${Reset}"
     }
     else {
-        Write-Centered "${manualHeaderColor}|${Reset} ${manualHeaderColor}C${Reset}${manualHeaderColor}onfigure Operating System${Reset} ${manualHeaderColor}|${Reset}"
+        Write-Centered "${manualHeaderColor}|${Reset} ${manualHeaderColor}MANUAL-MODE${Reset} ${manualHeaderColor}|${Reset}"
     }
     Write-Host ""
     
@@ -3016,18 +3015,13 @@ while ($true) {
     
     Write-Boundary # Separator
 
-    # [M]aintain Operating System (Pos 3)
-    if ($MenuSelection -eq 3) {
-        # Align with 56-char boundary lines (2 space indent + 56 char block)
-        Write-Host "  ${FGBlack}${BGYellow}               Maintain Operating System                ${Reset}"
-    }
-    else {
-        Write-Centered "${manualHeaderColor}|${Reset} ${manualHeaderColor}M${Reset}${manualHeaderColor}aintain Operating System${Reset} ${manualHeaderColor}|${Reset} "
-    }
+    # Maintenance sub-section (inline under MANUAL-MODE)
+    Write-Boundary # Separator between Config and Maintain items
+    Write-Centered "${manualHeaderColor}Maintain Operating System${Reset}"
     Write-Host ""
     
     # Maintenance Details
-    $mDetailColor = if ($MenuSelection -eq 3) { $FGGray } else { $FGDarkGray }
+    $mDetailColor = if ($MenuSelection -eq 2) { $FGGray } else { $FGDarkGray }
     
     function Write-MaintItem {
         param($Txt, $Met, $Key, [int]$Threshold = 7) 
@@ -3049,7 +3043,7 @@ while ($true) {
         Write-LeftAligned "${FGDarkGray}[${statusColor}$prefix${FGDarkGray}]${mDetailColor} $Txt${Reset}$pad${FGDarkGray}| ${mDetailColor}$Met${Reset}" -Indent 3  
     }
 
-    $mTopColor = if ($MenuSelection -eq 3) { $FGYellow } else { $FGWhite }
+    $mTopColor = if ($MenuSelection -eq 2) { $FGYellow } else { $FGWhite }
     Write-LeftAligned "${FGDarkGray}[${mTopColor}#${FGDarkGray}]${mTopColor} OF DAYS SINCE LAST RUN      ${FGDarkGray}|${mTopColor} ATOMIC_SCRIPT$Reset" -Indent 3
     Write-Centered "${FGDarkGray}--------------------------------------------------------$Reset"
     Write-MaintItem "Get Updates" "RUN_UpdateSuite.ps1" "Maintenance_WinUpdate" -Threshold 1
@@ -3083,13 +3077,13 @@ while ($true) {
     if ($res.VirtualKeyCode -eq 38) {
         # Up
         $MenuSelection--
-        if ($MenuSelection -lt 0) { $MenuSelection = 3 }
+        if ($MenuSelection -lt 0) { $MenuSelection = 2 }
         continue
     }
     elseif ($res.VirtualKeyCode -eq 40) {
         # Down
         $MenuSelection++
-        if ($MenuSelection -gt 3) { $MenuSelection = 0 }
+        if ($MenuSelection -gt 2) { $MenuSelection = 0 }
         continue
     }
     elseif ($res.VirtualKeyCode -eq 39) {
@@ -3135,12 +3129,9 @@ while ($true) {
             Invoke-WA_InstallApps
         }
         elseif ($Target -eq 2) {
-            # [C]onfig -> EXECUTE
+            # MANUAL-MODE -> Run Configure + Maintain, all steps forced (no SmartRun)
             Invoke-WinAutoConfiguration
             Set-WinAutoLastRun -Module "Configuration"
-        }
-        elseif ($Target -eq 3) {
-            # [M]aintenance -> EXECUTE (Manual overrides check)
             Invoke-WinAutoMaintenance
         }
         
