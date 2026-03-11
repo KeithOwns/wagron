@@ -10,7 +10,7 @@ WA is the core, standalone delivery of the full [WinAuto](https://github.com/Kei
 
 -   **Interactive Dashboard:** A modern, arrow-key driven CLI interface for manual and automated operations.
 -   **SmartRUN Automation:** Intelligent orchestration that audits system state and only applies changes where configuration drift is detected.
--   **Security Hardening:** Automates Microsoft Defender, Memory Integrity, Kernel Stack Protection, LSA Protection, and Windows Firewall.
+-   **Security Hardening:** Automates Microsoft Defender, Memory Integrity, Kernel Stack Protection, LSA Protection, App & browser control, and Windows Firewall.
 -   **Application Management:** Built-in application setups utilizing WinGet and direct downloads with silent deployment.
 -   **Automated Maintenance:** One-touch system repair (SFC/DISM), drive optimization, and temp file cleanup.
 -   **UI Automation:** Robust handling of Windows Settings that cannot be managed via the registry alone.
