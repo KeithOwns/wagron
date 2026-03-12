@@ -252,65 +252,63 @@ $Global:RegPath_Winlogon_Machine = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentV
 # --- MANIFEST CONTENT ---
 
 $Global:WinAutoManifestContent = @"
-${FGDarkCyan}============================================================${Reset}
-${FGDarkCyan}__________________________________________________________${Reset}
-${FGCyan}ACTION${Reset}                   ${FGDarkGray}|${Reset} ${FGCyan}STAGE${Reset}    ${FGDarkGray}|${Reset} ${FGDarkCyan}SOURCE SCRIPT${Reset}
-${FGDarkGray}----------------------------------------------------------${Reset}
-Adobe Creative Cloud     ${FGDarkGray}|${Reset} ${FGDarkCyan}Install${Reset}  ${FGDarkGray}|${Reset} ${FGGray}INSTALL_AdobeCC.ps1${Reset}
-Box Drive                ${FGDarkGray}|${Reset} ${FGDarkCyan}Install${Reset}  ${FGDarkGray}|${Reset} ${FGGray}INSTALL_BoxDrive.ps1${Reset}
-Box for Office           ${FGDarkGray}|${Reset} ${FGDarkCyan}Install${Reset}  ${FGDarkGray}|${Reset} ${FGGray}INSTALL_BoxOffice.ps1${Reset}
-Box Tools                ${FGDarkGray}|${Reset} ${FGDarkCyan}Install${Reset}  ${FGDarkGray}|${Reset} ${FGGray}INSTALL_BoxTools.ps1${Reset}
-Crestron AirMedia        ${FGDarkGray}|${Reset} ${FGDarkCyan}Install${Reset}  ${FGDarkGray}|${Reset} ${FGGray}INSTALL_AirMedia.ps1${Reset}
-Real-Time Protection     ${FGDarkGray}|${Reset} ${FGBlue}Configure${Reset}${FGDarkGray}|${Reset} ${FGGray}SET_RealTimeProt.ps1${Reset}
-PUA Protection           ${FGDarkGray}|${Reset} ${FGBlue}Configure${Reset}${FGDarkGray}|${Reset} ${FGGray}SET_PUABlockApps.ps1${Reset}
-PUA Protection (Edge)    ${FGDarkGray}|${Reset} ${FGBlue}Configure${Reset}${FGDarkGray}|${Reset} ${FGGray}SET_PUABlockDLs.ps1${Reset}
-Memory Integrity         ${FGDarkGray}|${Reset} ${FGBlue}Configure${Reset}${FGDarkGray}|${Reset} ${FGGray}SET_MemoryInteg.ps1${Reset}
-Kernel Stack Protection  ${FGDarkGray}|${Reset} ${FGBlue}Configure${Reset}${FGDarkGray}|${Reset} ${FGGray}SET_KernelMode.ps1${Reset}
-LSA Protection           ${FGDarkGray}|${Reset} ${FGBlue}Configure${Reset}${FGDarkGray}|${Reset} ${FGGray}SET_LocalSecurity.ps1${Reset}
-Windows Firewall         ${FGDarkGray}|${Reset} ${FGBlue}Configure${Reset}${FGDarkGray}|${Reset} ${FGGray}SET_FirewallON.ps1${Reset}
-Classic Context Menu     ${FGDarkGray}|${Reset} ${FGBlue}Configure${Reset}${FGDarkGray}|${Reset} ${FGGray}SET_ClassicMenu.ps1${Reset}
-Taskbar Search Box       ${FGDarkGray}|${Reset} ${FGBlue}Configure${Reset}${FGDarkGray}|${Reset} ${FGGray}SET_TaskbarSearch.ps1${Reset}
-Task View Toggle         ${FGDarkGray}|${Reset} ${FGBlue}Configure${Reset}${FGDarkGray}|${Reset} ${FGGray}SET_TaskViewOFF.ps1${Reset}
-Microsoft Update Service ${FGDarkGray}|${Reset} ${FGBlue}Configure${Reset}${FGDarkGray}|${Reset} ${FGGray}SET_MicrosoftUpd.ps1${Reset}
-Restart Notifications    ${FGDarkGray}|${Reset} ${FGBlue}Configure${Reset}${FGDarkGray}|${Reset} ${FGGray}SET_RestartIsReq.ps1${Reset}
-App Restart Persistence  ${FGDarkGray}|${Reset} ${FGBlue}Configure${Reset}${FGDarkGray}|${Reset} ${FGGray}SET_RestartApps.ps1${Reset}
-Get Updates              ${FGDarkGray}|${Reset} ${FGDarkBlue}Maintain${Reset} ${FGDarkGray}|${Reset} ${FGGray}RUN_UpdateSuite.ps1${Reset}
-Drive Optimization       ${FGDarkGray}|${Reset} ${FGDarkBlue}Maintain${Reset} ${FGDarkGray}|${Reset} ${FGGray}RUN_OptimizeDisks.ps1${Reset}
-Temp File Cleanup        ${FGDarkGray}|${Reset} ${FGDarkBlue}Maintain${Reset} ${FGDarkGray}|${Reset} ${FGGray}RUN_SystemCleanup.ps1${Reset}
-SFC / DISM Repair        ${FGDarkGray}|${Reset} ${FGDarkBlue}Maintain${Reset} ${FGDarkGray}|${Reset} ${FGGray}RUN_WindowsRepair.ps1${Reset}
-${FGDarkCyan}__________________________________________________________${Reset}
-${FGDarkCyan}__________________________________________________________${Reset}
+  ${FGDarkCyan}__________________________________________________________${Reset}
+  ${FGDarkCyan}ACTION${Reset}                   ${FGDarkGray}|${Reset} ${FGDarkCyan}STAGE${Reset}    ${FGDarkGray}|${Reset} ${FGDarkCyan}SOURCE SCRIPT${Reset}
+  ${FGDarkGray}----------------------------------------------------------${Reset}
+  Adobe Creative Cloud     ${FGDarkGray}|${Reset} ${FGGray}Install${Reset}  ${FGDarkGray}|${Reset} ${FGGray}INSTALL_AdobeCC${Reset}
+  Box Drive                ${FGDarkGray}|${Reset} ${FGGray}Install${Reset}  ${FGDarkGray}|${Reset} ${FGGray}INSTALL_BoxDrive${Reset}
+  Box for Office           ${FGDarkGray}|${Reset} ${FGGray}Install${Reset}  ${FGDarkGray}|${Reset} ${FGGray}INSTALL_BoxOffice${Reset}
+  Box Tools                ${FGDarkGray}|${Reset} ${FGGray}Install${Reset}  ${FGDarkGray}|${Reset} ${FGGray}INSTALL_BoxTools${Reset}
+  Crestron AirMedia        ${FGDarkGray}|${Reset} ${FGGray}Install${Reset}  ${FGDarkGray}|${Reset} ${FGGray}INSTALL_AirMedia${Reset}
+  Real-Time Protection     ${FGDarkGray}|${Reset} ${FGGray}Configure${Reset}${FGDarkGray}|${Reset} ${FGGray}SET_RealTimeProt${Reset}
+  PUA Protection           ${FGDarkGray}|${Reset} ${FGGray}Configure${Reset}${FGDarkGray}|${Reset} ${FGGray}SET_PUABlockApps${Reset}
+  PUA Protection (Edge)    ${FGDarkGray}|${Reset} ${FGGray}Configure${Reset}${FGDarkGray}|${Reset} ${FGGray}SET_PUABlockDLs${Reset}
+  Memory Integrity         ${FGDarkGray}|${Reset} ${FGGray}Configure${Reset}${FGDarkGray}|${Reset} ${FGGray}SET_MemoryInteg${Reset}
+  Kernel Stack Protection  ${FGDarkGray}|${Reset} ${FGGray}Configure${Reset}${FGDarkGray}|${Reset} ${FGGray}SET_KernelMode${Reset}
+  LSA Protection           ${FGDarkGray}|${Reset} ${FGGray}Configure${Reset}${FGDarkGray}|${Reset} ${FGGray}SET_LocalSecurity${Reset}
+  Windows Firewall         ${FGDarkGray}|${Reset} ${FGGray}Configure${Reset}${FGDarkGray}|${Reset} ${FGGray}SET_FirewallON${Reset}
+  Classic Context Menu     ${FGDarkGray}|${Reset} ${FGGray}Configure${Reset}${FGDarkGray}|${Reset} ${FGGray}SET_ClassicMenu${Reset}
+  Taskbar Search Box       ${FGDarkGray}|${Reset} ${FGGray}Configure${Reset}${FGDarkGray}|${Reset} ${FGGray}SET_TaskbarSearch${Reset}
+  Task View Toggle         ${FGDarkGray}|${Reset} ${FGGray}Configure${Reset}${FGDarkGray}|${Reset} ${FGGray}SET_TaskViewOFF${Reset}
+  Microsoft Update Service ${FGDarkGray}|${Reset} ${FGGray}Configure${Reset}${FGDarkGray}|${Reset} ${FGGray}SET_MicrosoftUpd${Reset}
+  Restart Notifications    ${FGDarkGray}|${Reset} ${FGGray}Configure${Reset}${FGDarkGray}|${Reset} ${FGGray}SET_RestartIsReq${Reset}
+  App Restart Persistence  ${FGDarkGray}|${Reset} ${FGGray}Configure${Reset}${FGDarkGray}|${Reset} ${FGGray}SET_RestartApps${Reset}
+  Get Updates              ${FGDarkGray}|${Reset} ${FGGray}Maintain${Reset} ${FGDarkGray}|${Reset} ${FGGray}RUN_UpdateSuite${Reset}
+  Drive Optimization       ${FGDarkGray}|${Reset} ${FGGray}Maintain${Reset} ${FGDarkGray}|${Reset} ${FGGray}RUN_OptimizeDisks${Reset}
+  Temp File Cleanup        ${FGDarkGray}|${Reset} ${FGGray}Maintain${Reset} ${FGDarkGray}|${Reset} ${FGGray}RUN_SystemCleanup${Reset}
+  SFC / DISM Repair        ${FGDarkGray}|${Reset} ${FGGray}Maintain${Reset} ${FGDarkGray}|${Reset} ${FGGray}RUN_WindowsRepair${Reset}
+  ${FGDarkCyan}__________________________________________________________${Reset}
 "@
 
 $Global:WinAutoCSVContent = @'
 ACTION,STAGE,SOURCE SCRIPT,METHOD,TECHNICAL DETAILS,REVERTIBLE,RESTART REQUIRED,IMPACT,FUNCTION
-Execution Policy / Admin Check,Pre-Run Setup,wa.ps1,Inline,Set-ExecutionPolicy RemoteSigned -Scope Process,N/A,No,System,(Script Header)
-Auto-Unblock,Pre-Run Setup,wa.ps1,Inline,Unblock-File (Self),N/A,No,System,(Script Header)
-System Hardening Check,SmartRUN,CHECK_SystemHarden.ps1,Mixed,Checks Last Run date (30 days) to determine invalidation,N/A,No,Automation,Invoke-WinAutoConfiguration -SmartRun
-Maintenance Cycle,SmartRUN,SET_ScheduleMaintn.ps1,Mixed,Checks Last Run dates (SFC=30d; Disk=7d; Clean=7d) to trigger tasks,N/A,No,Automation,Invoke-WinAutoMaintenance -SmartRun
-Adobe Creative Cloud,Install,INSTALL_AdobeCC.ps1,ATOMIC_SCRIPT,Uses AtomicScript for WinGet install,No,No,System,Invoke-WA_InstallApps
-Box Drive,Install,INSTALL_BoxDrive.ps1,ATOMIC_SCRIPT,Note: MSI has specific uninstall GUID issues,No,No,System,Invoke-WA_InstallApps
-Box for Office,Install,INSTALL_BoxOffice.ps1,ATOMIC_SCRIPT,EXE installer with silent args,No,No,System,Invoke-WA_InstallApps
-Box Tools,Install,INSTALL_BoxTools.ps1,ATOMIC_SCRIPT,EXE installer with silent args,No,No,System,Invoke-WA_InstallApps
-Crestron AirMedia,Install,INSTALL_AirMedia.ps1,ATOMIC_SCRIPT,Uses AtomicScript for WinGet/Machine install,No,No,System,Invoke-WA_InstallApps
-Real-Time Protection,Configure,SET_RealTimeProt.ps1,PS WMI,Set-MpPreference -DisableRealtimeMonitoring 0,Yes,No,Security,Invoke-WA_SetRealTimeProtection
-PUA Protection,Configure,SET_PUABlockApps.ps1,PS WMI,Set-MpPreference -PUAProtection 1,Yes,No,Security,Invoke-WA_SetPUABlockApps
-PUA Protection (Edge),Configure,SET_PUABlockDLs.ps1,Registry (HKCU),HKCU:\Software\Microsoft\Edge\SmartScreenPuaEnabled (1),Yes,No,Security,Invoke-WA_SetPUABlockDLs
-Memory Integrity,Configure,SET_MemoryInteg.ps1,Registry (HKLM),HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity (Enabled=1),Yes,Yes,Security,Invoke-WA_SetMemoryInteg
-Kernel Stack Protection,Configure,SET_KernelMode.ps1,Registry (HKLM),HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\KernelShadowStacks (Enabled=1),Yes,Yes,Security,Invoke-WA_SetKernelMode
-LSA Protection,Configure,SET_LocalSecurity.ps1,Registry (HKLM),HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\RunAsPPL (1),Yes,Yes,Security,Invoke-WA_SetLocalSecurity
-Windows Firewall,Configure,SET_FirewallON.ps1,PowerShell Cmdlt,Set-NetFirewallProfile -Enabled True,Yes,No,Security,Invoke-WA_SetFirewallON
-Classic Context Menu,Configure,SET_ClassicMenu.ps1,Registry (HKCU),HKCU:\Software\Classes\CLSID\{86ca1aa0...}\InprocServer32,Yes,No,UI,Invoke-WA_SetClassicMenu
-Taskbar Search Box,Configure,SET_TaskbarSearch.ps1,Registry (HKCU),HKCU:\Software\Microsoft\Windows\CurrentVersion\Search\SearchboxTaskbarMode (3),Yes,No,UI,Invoke-WA_SetTaskbarSearch
-Task View Toggle,Configure,SET_TaskViewOFF.ps1,Registry (HKCU),HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\ShowTaskViewButton (0),Yes,No,UI,Invoke-WA_SetTaskViewOFF
-Microsoft Update Service,Configure,SET_MicrosoftUpd.ps1,Registry (HKLM),HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings\AllowMUUpdateService (1),Yes,No,Config,Invoke-WA_SetMicrosoftUpd
-Restart Notifications,Configure,SET_RestartIsReq.ps1,Registry (HKLM),HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings\RestartNotificationsAllowed2 (1),Yes,No,Config,Invoke-WA_SetRestartIsReq
-App Restart Persistence,Configure,SET_RestartApps.ps1,Registry (HKCU),HKCU:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\RestartApps (1),Yes,No,Config,Invoke-WA_SetRestartApps
-Get Updates,Maintain,RUN_UpdateSuite.ps1,UI Automation,Automates Windows Update Settings and MS Store updates,No,No,Maintenance,Invoke-WA_WindowsUpdate
-
-Drive Optimization,Maintain,RUN_OptimizeDisks.ps1,PowerShell Cmdlt,Optimize-Volume -DriveLetter C -NormalPriority,No,No,Maintenance,Invoke-WA_OptimizeDisks
-Temp File Cleanup,Maintain,RUN_SystemCleanup.ps1,File System,Clears Windows Temp and User Temp,No,No,Maintenance,Invoke-WA_SystemCleanup
-SFC / DISM Repair,Maintain,RUN_WindowsRepair.ps1,Command Line,Runs SFC scan; if corruption found runs DISM,No,No,Maintenance,Invoke-WA_WindowsRepair
+Execution Policy / Admin Check,Pre-Run Setup,wa,Inline,Set-ExecutionPolicy RemoteSigned -Scope Process,N/A,No,System,(Script Header)
+Auto-Unblock,Pre-Run Setup,wa,Inline,Unblock-File (Self),N/A,No,System,(Script Header)
+System Hardening Check,SmartRUN,wa (Embedded),Mixed,Checks system state vs desired configuration,N/A,No,Automation,Invoke-WinAutoConfiguration -SmartRun
+Maintenance Cycle,SmartRUN,wa (Embedded),Mixed,Checks Last Run dates (Repair=30d; Disk=7d; Clean=7d) to trigger tasks,N/A,No,Automation,Invoke-WinAutoMaintenance -SmartRun
+Adobe Creative Cloud,Install,INSTALL_AdobeCC,ATOMIC_SCRIPT,Uses AtomicScript for WinGet install,No,No,System,Invoke-WA_InstallApps
+Box Drive,Install,INSTALL_BoxDrive,ATOMIC_SCRIPT,Note: MSI has specific uninstall GUID issues,No,No,System,Invoke-WA_InstallApps
+Box for Office,Install,INSTALL_BoxOffice,ATOMIC_SCRIPT,EXE installer with silent args,No,No,System,Invoke-WA_InstallApps
+Box Tools,Install,INSTALL_BoxTools,ATOMIC_SCRIPT,EXE installer with silent args,No,No,System,Invoke-WA_InstallApps
+Crestron AirMedia,Install,INSTALL_AirMedia,ATOMIC_SCRIPT,Uses AtomicScript for WinGet/Machine install,No,No,System,Invoke-WA_InstallApps
+Real-Time Protection,Configure,wa (Embedded),PS WMI,Set-MpPreference -DisableRealtimeMonitoring 0,Yes,No,Security,Invoke-WA_SetRealTimeProt
+PUA Protection,Configure,wa (Embedded),PS WMI,Set-MpPreference -PUAProtection 1,Yes,No,Security,Invoke-WA_SetPUABlockApps
+PUA Protection (Edge),Configure,wa (Embedded),Registry (HKCU),HKCU:\Software\Microsoft\Edge\SmartScreenPuaEnabled (1),Yes,No,Security,Invoke-WA_SetPUABlockDLs
+Memory Integrity,Configure,wa (Embedded),Registry (HKLM),HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity (1),Yes,Yes,Security,Invoke-WA_SetMemoryInteg
+Kernel Stack Protection,Configure,wa (Embedded),Registry (HKLM),HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\KernelShadowStacks (1),Yes,Yes,Security,Invoke-WA_SetKernelMode
+LSA Protection,Configure,wa (Embedded),Registry (HKLM),HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\RunAsPPL (1),Yes,Yes,Security,Invoke-WA_SetLocalSecurity
+Windows Firewall,Configure,wa (Embedded),PowerShell Cmdlt,Set-NetFirewallProfile -Enabled True,Yes,No,Security,Invoke-WA_SetFirewallON
+Taskbar Search Box,Configure,wa (Embedded),Registry (HKCU),HKCU:\Software\Microsoft\Windows\CurrentVersion\Search\SearchboxTaskbarMode (3),Yes,No,UI,Invoke-WA_SetTaskbarSearch
+Task View Toggle,Configure,wa (Embedded),Registry (HKCU),HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\ShowTaskViewButton (0),Yes,No,UI,Invoke-WA_SetTaskViewOFF
+SmartScreen (UIA),Configure,wa (Embedded),UI Automation,Automates Windows Security App & Browser control,No,No,Security,Invoke-WA_SetSmartScreen
+Defender Remediation (UIA),Configure,wa (Embedded),UI Automation,Automates Windows Security Virus & Threat protection,No,No,Security,Invoke-WA_SetVirusThreatProtect
+Microsoft Update Service,Configure,wa (Embedded),Registry (HKLM),HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings\AllowMUUpdateService (1),Yes,No,Config,Invoke-WA_SetMicrosoftUpd
+Restart Notifications,Configure,wa (Embedded),Registry (HKLM),HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings\RestartNotificationsAllowed2 (1),Yes,No,Config,Invoke-WA_SetRestartIsReq
+App Restart Persistence,Configure,wa (Embedded),Registry (HKCU),HKCU:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\RestartApps (1),Yes,No,Config,Invoke-WA_SetRestartApps
+Get Updates,Maintain,wa (Embedded),UI Automation,Automates Windows Update Settings and MS Store updates,No,No,Maintenance,Invoke-WA_WindowsUpdate
+Drive Optimization,Maintain,wa (Embedded),PowerShell Cmdlt,Optimize-Volume for all fixed disks (SSD=Trim; HDD=Defrag),No,No,Maintenance,Invoke-WA_OptimizeDisks
+Temp File Cleanup,Maintain,wa (Embedded),File System,Clears Windows Temp and User Temp,No,No,Maintenance,Invoke-WA_SystemCleanup
+SFC / DISM Repair,Maintain,wa (Embedded),Command Line,Runs SFC scan; if corruption found runs DISM image repair,No,No,Maintenance,Invoke-WA_WindowsRepair
 '@
 
 
@@ -539,8 +537,8 @@ function Write-LeftAligned {
 }
 
 function Write-Boundary {
-    param([string]$Color = $FGDarkCyan)
-    Write-Centered "$Color$([string]'_' * 56)$Reset"
+    param([string]$Color = $FGDarkBlue)
+    Write-Host "  $Color$([string]'_' * 56)$Reset"
 }
 
 function Export-WinAutoCSV {
@@ -589,7 +587,7 @@ function Write-Header {
 }
 
 function Write-Footer {
-    Write-Host "${FGCyan}$('_' * 60)${Reset}"
+    Write-Host "  ${FGCyan}$('_' * 56)${Reset}"
     $FooterText = "$Char_Copyright 2026 www.AIIT.support"
     Write-Centered "$FGCyan$FooterText$Reset"
 }
@@ -677,12 +675,9 @@ $Global:TickAction = {
     if ($null -eq $PromptCursorTop) { $PromptCursorTop = [Console]::CursorTop }
     
     $Line = ""
-    
-    if ($ActionText -eq "DASHBOARD") {
-        
-        # User defined footer with colors
-        # Use ^ v keys then press Space to RUN | Esc to EXIT
-        $Line = "                       ${Global:FGYellow}Navigation${Global:Reset} ${Global:FGBlack}${Global:BGDarkCyan}KEYS${Global:Reset}                       `n   ${Global:FGBlack}${Global:BGDarkCyan} ^ ${Global:Reset}  ${Global:FGGray}arrow${Global:Reset}  ${Global:FGBlack}${Global:BGDarkCyan} v ${Global:Reset}  ${Global:FGGray}keys${Global:Reset} ${Global:FGYellow}->${Global:Reset}${Global:FGDarkGray}|${Global:Reset}${Global:FGBlack}${Global:BGYellow}Select${Global:Reset}${Global:FGDarkGray}|${Global:Reset}${Global:FGYellow}<-${Global:Reset} ${Global:FGDarkGray}|${Global:Reset} ${Global:FGBlack}${Global:BGDarkCyan}I${Global:Reset}${Global:FGWhite}nfo${Global:Reset} ${Global:FGDarkGray}|${Global:Reset} ${Global:FGBlack}${Global:BGDarkRed}Esc${Global:Reset} ${Global:FGGray}to${Global:Reset} ${Global:FGDarkRed}${Global:BGWhite}EXIT${Global:Reset}"
+     if ($ActionText -eq "DASHBOARD") {
+        # KEYS ^ v keys | info | Esc
+        $Line = "  ${Global:FGBlack}${Global:BGYellow} KEYS ${Global:Reset}  ${Global:FGBlack}${Global:BGYellow} ^ ${Global:Reset}   ${Global:FGBlack}${Global:BGYellow} v ${Global:Reset}  ${Global:FGDarkGray}|${Global:Reset}  ${Global:FGBlack}${Global:BGYellow} i ${Global:Reset}${Global:FGGray}nfo${Global:Reset}  ${Global:FGDarkGray}|${Global:Reset}  ${Global:FGBlack}${Global:BGDarkCyan} Esc ${Global:Reset}"
     }
 
     try { [Console]::SetCursorPosition(0, $PromptCursorTop); Write-Host $Line } catch {}
@@ -920,7 +915,7 @@ function Test-WinAutoAttestation {
     $s_View = Test-Reg "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" "ShowTaskViewButton" 0
     $s_MU = Test-Reg "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" "AllowMUUpdateService" 1
     $s_Rest = Test-Reg "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" "RestartNotificationsAllowed2" 1
-    $s_Pers = Test-Reg "HKCU:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "RestartApps" 1
+    $s_Pers = Test-Reg "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" "RestartApps" 1
     
     # 2. Context Menu
     $ctxPath = "HKCU:\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32"
@@ -2755,13 +2750,11 @@ while ($true) {
 
 
 
-    if ($MenuSelection -eq 0) {
-        Write-Centered "${FGBlack}${BGDarkGray}__MANUAL-MODE-OFF__${Reset}"
-        # Alternative: Write-Centered "${FGBlack}${BGDarkGray}  MANUAL-MODE-OFF  ${Reset}"
+    if ($MenuSelection -eq 2) {
+        Write-Host "  ${Global:FGBlack}${Global:BGYellow}___________________MANUAL MODE_________________${Global:Reset}"
     }
     else {
-        # Align with 56-char boundary lines (2 space indent + 56 char block)
-        Write-Host "  ${Global:BGDarkCyan}${Global:FGBlack}                   __MANUAL-MODE-ON__                   ${Global:Reset}"
+        Write-Host "  ${Global:FGBlack}${Global:BGDarkGray}_________________MANUAL-MODE-OFF_______________${Global:Reset}"
     }
     Write-Boundary # Separator
 
@@ -2829,12 +2822,12 @@ while ($true) {
     Write-Host ""
     Write-Boundary # Separator
 
-    # MANUAL-MODE (Pos 2) - Runs Configure + Maintain, all steps forced
+    # Configure Operating System (Pos 2) - MANUAL-MODE
     if ($MenuSelection -eq 2) {
-        Write-Host "  ${FGBlack}${BGYellow}                      MANUAL-MODE                      ${Reset}"
+        Write-Host "  ${Global:FGBlack}${Global:BGYellow}               Configure Operating System               ${Reset}"
     }
     else {
-        Write-Centered "${manualHeaderColor}|${Reset} ${manualHeaderColor}MANUAL-MODE${Reset} ${manualHeaderColor}|${Reset}"
+        Write-Centered "${manualHeaderColor}|${Reset} ${manualHeaderColor}Configure Operating System${Reset} ${manualHeaderColor}|${Reset}"
     }
     Write-Host ""
     
@@ -3103,16 +3096,13 @@ while ($true) {
             }
         }
         Write-Host ""
-        Write-Host "                       ${Global:FGYellow}Navigation${Global:Reset} ${Global:FGBlack}${Global:BGDarkCyan}KEYS${Global:Reset}                       `n  ${Global:FGBlack}${Global:BGDarkCyan}Enter${Global:Reset} ${Global:FGGray}to export CSV${Global:Reset} ${Global:FGDarkGray}|${Global:Reset} ${Global:FGYellow}->${Global:Reset}${Global:FGDarkGray}|${Global:Reset}${Global:FGBlack}${Global:BGYellow}Space${Global:Reset}${Global:FGDarkGray}|${Global:Reset}${Global:FGYellow}<-${Global:Reset} ${Global:FGGray}to return${Global:Reset} ${Global:FGDarkGray}|${Global:Reset} ${Global:FGBlack}${Global:BGDarkCyan}Esc${Global:Reset} ${Global:FGGray}to${Global:Reset} ${Global:FGDarkRed}${Global:BGWhite}EXIT${Global:Reset}"
+        Write-Host "  ${Global:FGBlack}${Global:BGYellow} Enter ${Global:Reset} ${Global:FGGray}to export CSV${Global:Reset}  ${Global:FGDarkGray}|${Global:Reset}  ${Global:FGBlack}${Global:BGYellow} Esc ${Global:Reset} ${Global:FGGray}to return${Global:Reset}"
         while ($true) {
             $mk = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
             if ($mk.Character -eq ' ' -or $mk.VirtualKeyCode -eq 32 -or $mk.Character -eq 'I' -or $mk.Character -eq 'i') { break }
             if ($mk.VirtualKeyCode -eq 27) { 
-                # Esc pressed - exit script
-                Write-Host ""
-                Write-Centered "Copyright (c) 2026 WinAuto"
-                Write-Host ""
-                return
+                # Esc pressed - return to dashboard
+                break
             }
             if ($mk.VirtualKeyCode -eq 13) {
                 # Enter pressed - export CSV

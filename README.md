@@ -1,10 +1,10 @@
-# WA (Core Version of WinAuto)
+# WAGRON (Core Version of WinAuto)
 
 > **Enterprise-grade Windows 11 configuration management in a single, self-contained PowerShell file.**
 
 ![Version](https://img.shields.io/badge/version-2.1.0-blue) ![Platform](https://img.shields.io/badge/platform-Windows%2011-lightgray) ![License](https://img.shields.io/badge/license-MIT-green)
 
-WA is the core, standalone delivery of the full [WinAuto](https://github.com/KeithOwns/winauto) suite. It is a powerful, lightweight automation script designed to streamline configuration, security hardening, and maintenance of Windows 11 systems—consolidated entirely into one interactive file.
+WAGRON is the core, standalone delivery of the full [WinAuto](https://github.com/KeithOwns/winauto) suite. It is a powerful, lightweight automation script designed to streamline configuration, security hardening, and maintenance of Windows 11 systems—consolidated entirely into one interactive file.
 
 ## 🚀 Key Features
 
@@ -20,17 +20,17 @@ WA is the core, standalone delivery of the full [WinAuto](https://github.com/Kei
 1.  **Elevate:** Open a PowerShell window as **Administrator**.
 2.  **Run:** Execute the core script:
     ```powershell
-    .\wa.ps1
+    .\wagron.ps1
     ```
 3.  **Navigate:** Use the `^` and `v` arrow keys to select sections.
 4.  **Execute:** Press `Space` to run the selected section or `SmartRUN`.
-5.  **Info:** Press `I` to view the functional outline.
+5.  **Info:** Press `I` to view the functional outline. From the Info page, press `Enter` to export a technical CSV map or `Esc` to return to the dashboard.
 
 ## 📁 Repository Structure
 
 Unlike the full WinAuto suite, the WA repository relies on a strictly single-file architecture:
 
--   `wa.ps1`: The complete standalone core script comprising the interactive dashboard and all automation logic. No external dependencies or separate folders required.
+-   `wagron.ps1`: The complete standalone core script comprising the interactive dashboard and all automation logic. No external dependencies or separate folders required.
 
 ## 🛡️ Requirements
 
