@@ -2295,10 +2295,7 @@ while ($true) {
     Add-DashLine (" " * 15 + "${cHeaderColor}Configure Operating System${Reset}")
     Add-DashLine ""
 
-    # Infrastructure Setup Section
-    Add-DashLine (" " * 18 + "${FGDarkCyan}Infrastructure Setup${Reset}")
-    Add-DashLine (" " * 3 + "${FGDarkGreen}[v]${FGDarkGray}Execution ${FGDarkGreen}[v]${FGDarkGray}Unblock ${FGDarkGreen}[v]${FGDarkGray}Harden ${FGDarkGreen}[v]${FGDarkGray}Maintain${Reset}")
-    Add-DashLine ""
+
     
     $cTopColor = if ($Global:MenuSelection -eq 1 -or ($Global:MenuSelection -eq 0 -and $configActive)) { $FGWhite } else { $FGDarkGray }
     $cLabelColor = if ($Global:MenuSelection -eq 1 -or ($Global:MenuSelection -eq 0 -and $configActive)) { $FGWhite } else { $FGDarkGray }
@@ -2308,6 +2305,7 @@ while ($true) {
     
     $Global:cDetailColorGlobal = if ($Global:MenuSelection -eq 1) { $FGGray } else { $FGDarkGray }
     
+    Write-ColItem "Infrastructure Setup" "SET_Infrastructure" $true
     Write-ColItem "Real-Time Protection" "SET_RealTimeProt" $s_RT
     
     
