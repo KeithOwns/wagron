@@ -1,10 +1,17 @@
-# WAGRON (Core Version of WinAuto)
+# WA (Core Version of WinAuto)
 
 > **Enterprise-grade Windows 11 configuration management in a single, self-contained PowerShell file.**
 
 ![Version](https://img.shields.io/badge/version-2.1.0-blue) ![Platform](https://img.shields.io/badge/platform-Windows%2011-lightgray) ![License](https://img.shields.io/badge/license-MIT-green)
 
-WAGRON is the core, standalone delivery of the full [WinAuto](https://github.com/KeithOwns/winauto) suite. It is a powerful, lightweight automation script designed to streamline configuration, security hardening, and maintenance of Windows 11 systems—consolidated entirely into one interactive file.
+WA is the core, standalone delivery of the full [WinAuto](https://github.com/KeithOwns/winauto) suite. It is a powerful, lightweight automation script designed to streamline configuration, security hardening, and maintenance of Windows 11 systems—consolidated entirely into one interactive file.
+
+## ⚡ Quick Start
+
+Run this command in an **Administrator** PowerShell window to download and execute WA instantly:
+```powershell
+iex (irm https://raw.githubusercontent.com/KeithOwns/wa/main/wa.ps1)
+```
 
 ## 🚀 Key Features
 
@@ -20,7 +27,7 @@ WAGRON is the core, standalone delivery of the full [WinAuto](https://github.com
 1.  **Elevate:** Open a PowerShell window as **Administrator**.
 2.  **Run:** Execute the core script:
     ```powershell
-    .\wagron.ps1
+    .\wa.ps1
     ```
 3.  **Navigate:** Use the `^` and `v` arrow keys to select sections.
 4.  **Execute:** Press `Space` to run the selected section or `SmartRUN`.
@@ -30,7 +37,7 @@ WAGRON is the core, standalone delivery of the full [WinAuto](https://github.com
 
 Unlike the full WinAuto suite, the WA repository relies on a strictly single-file architecture:
 
--   `wagron.ps1`: The complete standalone core script comprising the interactive dashboard and all automation logic. No external dependencies or separate folders required.
+-   `wa.ps1`: The complete standalone core script comprising the interactive dashboard and all automation logic. No external dependencies or separate folders required.
 
 ## 🛡️ Requirements
 
