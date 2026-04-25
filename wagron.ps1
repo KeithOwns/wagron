@@ -2277,10 +2277,7 @@ while ($true) {
     Add-DashLine ""
 
 
-    # Infrastructure Setup Section
-    Add-DashLine (" " * 18 + "${FGDarkCyan}Infrastructure Setup${Reset}")
-    Add-DashLine (" " * 3 + "${FGDarkGreen}[v]${FGDarkGray}Execution ${FGDarkGreen}[v]${FGDarkGray}Unblock ${FGDarkGreen}[v]${FGDarkGray}Harden ${FGDarkGreen}[v]${FGDarkGray}Maintain${Reset}")
-    Add-DashLine ""
+
 
     # MANUAL-MODE Section
 
@@ -2296,6 +2293,11 @@ while ($true) {
     $cHeaderColor = if ($Global:MenuSelection -eq 1 -or ($Global:MenuSelection -eq 0 -and $configActive)) { $FGWhite } else { $FGDarkGray }
     Add-DashLine "  ${manualHeaderColor}$('_' * 52)${Reset}"
     Add-DashLine (" " * 15 + "${cHeaderColor}Configure Operating System${Reset}")
+    Add-DashLine ""
+
+    # Infrastructure Setup Section
+    Add-DashLine (" " * 18 + "${FGDarkCyan}Infrastructure Setup${Reset}")
+    Add-DashLine (" " * 3 + "${FGDarkGreen}[v]${FGDarkGray}Execution ${FGDarkGreen}[v]${FGDarkGray}Unblock ${FGDarkGreen}[v]${FGDarkGray}Harden ${FGDarkGreen}[v]${FGDarkGray}Maintain${Reset}")
     Add-DashLine ""
     
     $cTopColor = if ($Global:MenuSelection -eq 1 -or ($Global:MenuSelection -eq 0 -and $configActive)) { $FGWhite } else { $FGDarkGray }
