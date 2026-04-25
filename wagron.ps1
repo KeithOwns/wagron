@@ -1235,7 +1235,7 @@ function Invoke-WA_SetRealTimeProt {
                 
                 # Footer
                 Write-Host ""
-                $copyright = "Copyright (c) 2026 WinAuto"; $cPad = [Math]::Floor((60 - $copyright.Length) / 2); Write-Host (" " * $cPad + "$FGCyan$copyright$Reset"); Write-Host ""
+                $copyright = ""; $cPad = [Math]::Floor((60 - $copyright.Length) / 2); Write-Host (" " * $cPad + "$FGCyan$copyright$Reset"); Write-Host ""
                 return
             }
         }
@@ -1592,7 +1592,7 @@ function Invoke-WA_SetKernelMode {
 
         # --- FOOTER ---
         Write-Host ""
-        $copyright = "Copyright (c) 2026 WinAuto"
+        $copyright = ""
         $cPad = [Math]::Floor((60 - $copyright.Length) / 2)
         Write-Host (" " * $cPad + "$FGCyan$copyright$Reset")
         Write-Host ""
@@ -1941,7 +1941,7 @@ function Invoke-WA_OptimizeDisks {
     if ($Reverse) {
         Write-LeftAligned "$FGYellow$Char_Warn Reverse Mode: Disk optimization cannot be reversed.$Reset"
         Write-Host ""
-        $copyright = "Copyright (c) 2026 WinAuto"; $cPad = [Math]::Floor((60 - $copyright.Length) / 2); Write-Host (" " * $cPad + "$FGCyan$copyright$Reset"); Write-Host ""
+        $copyright = ""; $cPad = [Math]::Floor((60 - $copyright.Length) / 2); Write-Host (" " * $cPad + "$FGCyan$copyright$Reset"); Write-Host ""
         return
     }
 
@@ -1997,7 +1997,7 @@ function Invoke-WA_SystemCleanup {
     if ($Reverse) {
         Write-LeftAligned "$FGYellow$Char_Warn Reverse Mode: File cleanup cannot be reversed.$Reset"
         Write-Host ""
-        $copyright = "Copyright (c) 2026 WinAuto"; $cPad = [Math]::Floor((60 - $copyright.Length) / 2); Write-Host (" " * $cPad + "$FGCyan$copyright$Reset"); Write-Host ""
+        $copyright = ""; $cPad = [Math]::Floor((60 - $copyright.Length) / 2); Write-Host (" " * $cPad + "$FGCyan$copyright$Reset"); Write-Host ""
         return
     }
 
@@ -2120,7 +2120,7 @@ function Invoke-WA_WindowsRepair {
     if ($Reverse) {
         Write-LeftAligned "$FGYellow$Char_Warn Reverse Mode: System repairs cannot be reversed.$Reset"
         Write-Host ""
-        $copyright = "Copyright (c) 2026 WinAuto"; $cPad = [Math]::Floor((60 - $copyright.Length) / 2); Write-Host (" " * $cPad + "$FGCyan$copyright$Reset"); Write-Host ""
+        $copyright = ""; $cPad = [Math]::Floor((60 - $copyright.Length) / 2); Write-Host (" " * $cPad + "$FGCyan$copyright$Reset"); Write-Host ""
         return
     }
 
@@ -2452,5 +2452,5 @@ Write-Host ""
 Write-Footer
 # Invoke-AnimatedPause -ActionText "EXIT" -Timeout 0 | Out-Null
 Write-Host ""
-Write-Centered "Copyright (c) 2026 WinAuto"
+Write-Centered ""
 Write-Host ""
